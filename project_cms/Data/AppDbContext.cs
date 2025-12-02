@@ -10,6 +10,6 @@ namespace project_cms.Data
         }
 
         public DbSet<User> Users { get; set; }
-        // Isaac ajoutera Articles ici
+        public DbSet<Article> Articles { get; set; } // ajouté ici
     }
 }
