@@ -1,4 +1,5 @@
-﻿using project_cms.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using project_cms.Data;
 using project_cms.Interfaces;
 using project_cms.Models;
 
@@ -30,7 +31,7 @@ namespace project_cms.Repositories
             }
         }
 
-        public async Task<IEnumerable<Article>> GetAllArticlesAsync()
+        public async Task<List<Article>> GetAllArticlesAsync()
         {
             return await _context.Articles.ToListAsync();
         }
