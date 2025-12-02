@@ -1,0 +1,87 @@
+# .gitignore pour .NET 8 + __Visual Studio 2022__
+# Basé sur les bonnes pratiques Visual Studio / dotnet
+
+# Build output
+[Bb]in/
+[Oo]bj/
+out/
+artifacts/
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+.idea/**/workspace.xml
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# dotnet local tools & SDK artifacts
+.dotnet/
+.dotnet/tools/
+
+# Publish / deployment
+publish/
+*.Publish.xml
+*.publishsettings
+
+# Azure Functions local settings
+local.settings.json
+
+# User secrets / local configuration
+secrets.json
+appsettings.Local.json
+appsettings.*.Local.json
+
+# Test results / coverage
+TestResults/
+*.trx
+*.coverage
+coverage*.xml
+coverage*.json
+
+# Logs
+*.log
+
+# ReSharper / JetBrains tools
+_ReSharper*/
+*.DotSettings.user
+*.ReSharper
+
+# dotCover
+*.dotCover
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary / backup
+*~
+*.tmp
+*.bak
+*.swp
+
+# Node (if front-end parts exist)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+dist/
+
+# Docker compose override (local dev)
+docker-compose.override.yml
