@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using project_cms.Interfaces;
 using project_cms.Models;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace project_cms.Controllers
 {
@@ -32,9 +34,13 @@ namespace project_cms.Controllers
         [HttpPost]
         public IActionResult Create(User user)
         {
+            var hasher = new PasswordHasher<User>();
+            user.Password = hasher.HashPassword(user, user.Password);
+
             var newUser = _repository.Create(user);
             return CreatedAtAction(nameof(GetById), new { id = newUser.Id }, newUser);
         }
+
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, User user)
