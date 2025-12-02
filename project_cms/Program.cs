@@ -2,20 +2,20 @@ using Microsoft.EntityFrameworkCore;
 using project_cms.Data;
 using project_cms.Interfaces;
 using project_cms.Repositories;
+using project_cms.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add DbContext (PostgreSQL)
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// User Repository
+builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+builder.Services.AddScoped<ArticleMapper>();
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

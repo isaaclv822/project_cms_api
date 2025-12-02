@@ -47,18 +47,12 @@ namespace project_cms.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateArticle(int id, [FromBody] ArticleRequestDTO articleDto)
+        public async Task<ActionResult<Article>> UpdateArticle(int id, [FromBody] ArticleRequestDTO articleDto)
         {
-            var existingArticle = await _articleRepository.GetArticleByIdAsync(id);
-            if (existingArticle == null) return NotFound();
+            var updatedArticle = await _articleRepository.UpdateArticleAsync(id, articleDto);
+            if (updatedArticle == null) return NotFound($"Article d\'ID : {id} introuvable.");
 
-            var updatedArticle = await _articleMapper.DtoToEntity(articleDto);
-            updatedArticle.Id = id;
-            updatedArticle.UpdatedDate = DateTime.UtcNow;
-
-            await _articleRepository.UpdateArticleAsync(updatedArticle);
-
-            return NoContent();
+            return Ok(updatedArticle);
         }
 
         [HttpDelete("delete/{id}")]

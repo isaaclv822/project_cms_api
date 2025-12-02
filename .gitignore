@@ -1,5 +1,5 @@
 # .gitignore pour .NET 8 + __Visual Studio 2022__
-# Basé sur les bonnes pratiques Visual Studio / dotnet
+# Basï¿½ sur les bonnes pratiques Visual Studio / dotnet
 
 # Build output
 [Bb]in/
@@ -85,3 +85,9 @@ dist/
 
 # Docker compose override (local dev)
 docker-compose.override.yml
+
+# Ignorer les migrations EF Core
+Migrations/
+
+# Ignorer la configuration locale
+appsettings.json

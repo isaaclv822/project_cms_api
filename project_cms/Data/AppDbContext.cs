@@ -15,10 +15,7 @@ namespace project_cms.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseNpgsql(configuration.GetConnectionString("bdd"));
-            }
+            optionsBuilder.UseNpgsql(configuration.GetConnectionString("bdd"));
         }
 
         public DbSet<User> Users { get; set; }

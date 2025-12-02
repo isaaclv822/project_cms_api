@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using project_cms.Data;
+using project_cms.DTOs;
 using project_cms.Interfaces;
 using project_cms.Models;
 
@@ -41,9 +42,17 @@ namespace project_cms.Repositories
             return await _context.Articles.FindAsync(id);
         }
 
-        public async Task<Article> UpdateArticleAsync(Article article)
+        public async Task<Article> UpdateArticleAsync(int id, ArticleRequestDTO dto)
         {
-            _context.Articles.Update(article);
+            var article = await _context.Articles.FindAsync(id);
+            if (article == null)
+            {
+                return null;
+            }
+            article.Title = dto.Title;
+            article.Content = dto.Content;
+            article.UpdatedDate = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
             return article;
         }
