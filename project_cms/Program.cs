@@ -1,11 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using project_cms.Data;
+using project_cms.Interfaces;
+using project_cms.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add DbContext (PostgreSQL)
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// User Repository
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
