@@ -32,25 +32,30 @@ namespace project_cms.Controllers
         {
             var article = _articleMapper.EntityToDto(await _articleRepository.GetArticleByIdAsync(id));
 
-            if (article == null) return NotFound();
+            if (article == null) return NotFound($"Article d\'ID : {id}, introuvable.");
 
             return Ok(article);
         }
 
         [HttpPost("add")]
-        public async Task<Article> AddArticle([FromBody] ArticleRequestDTO articleDto)
+        public async Task<IActionResult> AddArticle([FromBody] ArticleRequestDTO articleDto)
         {
             var article = await _articleMapper.DtoToEntity(articleDto);
-            article.PublishedDate = DateTime.UtcNow;
-            article.UpdatedDate = DateTime.UtcNow;
-            return await _articleRepository.CreateArticleAsync(article);
+            var created = await _articleRepository.CreateArticleAsync(article);
+            
+            if (created == null)
+            {
+                return BadRequest("L'opération a échouée.");
+            }
+
+            return Ok(article);
         }
 
         [HttpPut("update/{id}")]
         public async Task<ActionResult<Article>> UpdateArticle(int id, [FromBody] ArticleRequestDTO articleDto)
         {
             var updatedArticle = await _articleRepository.UpdateArticleAsync(id, articleDto);
-            if (updatedArticle == null) return NotFound($"Article d\'ID : {id} introuvable.");
+            if (updatedArticle == null) return NotFound($"Article d\'ID : {id}, introuvable.");
 
             return Ok(updatedArticle);
         }
@@ -59,7 +64,7 @@ namespace project_cms.Controllers
         public async Task<IActionResult> DeleteArticle(int id)
         {
             var existingArticle = await _articleRepository.GetArticleByIdAsync(id);
-            if (existingArticle == null) return NotFound($"Article d\'ID : {id} introuvable.");
+            if (existingArticle == null) return NotFound($"Article d\'ID : {id}, introuvable.");
 
             await _articleRepository.DeleteArticleAsync(id);
 
