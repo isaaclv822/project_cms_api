@@ -1,6 +1,15 @@
-﻿namespace project_cms.Data
+﻿using Microsoft.EntityFrameworkCore;
+using project_cms.Models;
+
+namespace project_cms.Data
 {
-    public class AppDbContext
+    public class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<User> Users { get; set; }
+        // Isaac ajoutera Articles ici
     }
 }
