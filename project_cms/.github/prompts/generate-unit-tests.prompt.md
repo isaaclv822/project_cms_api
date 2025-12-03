@@ -1,41 +1,78 @@
 ---
 mode: 'agent'
-description: 'Generate unit tests for selected functions or methods'
+description: 'Generate C# unit tests for selected functions or methods using xUnit and Moq'
 ---
 
 ## Task
-Analyze the selected function/method and generate focused unit tests that thoroughly validate its behavior.
+Analyze the selected C# method or service and generate focused unit tests that thoroughly validate its behavior using xUnit and Moq.
 
 ## Test Generation Strategy
 
 1. **Core Functionality Tests**
-- Test the main purpose/expected behavior
-- Verify return values with typical inputs
-- Test with realistic data scenarios
+- Test expected behavior with typical input data
+- Verify return values and state changes
+- Use realistic domain examples (entities, DTOs)
 
 2. **Input Validation Tests**
-- Invalid input types
-- null / undefined values
-- empty strings/arrays/objects
-- boundary values (min/max&)
+- null values
+- empty strings
+- invalid GUID
+- boundary values
 
 3. **Error Handling Tests**
-- Expected exceptions
-- Error messages
-- Edge cases
+- Expected exceptions (e.g. NotFoundException, ValidationException)
+- Use Assert.ThrowsAsync
+- Verify exception message
 
-4. **Side Effects Tests**
-- External calls
-- State changes
-- Interaction with dependencies
+4. **Interaction / Side Effects Tests**
+- Verify calls to repository or service dependencies
+- Use Moq `Setup()` and `Verify()`
+- Ensure no unexpected extra calls
 
 ## Test Structure Requirements
 
-- Use the framework of the project (pytest, jest&)
-- AAA Pattern : Arrange / Act / Assert
-- Descriptive test names
-- Group tests with describe/context blocks
-- Mock external dependencies cleanly
+- **Testing Framework:** xUnit
+- **Mocking Library:** Moq
+- **Pattern:** AAA (Arrange / Act / Assert)
+- One test class per target class
+- One test method per scenario
+- Use descriptive method names: MethodName_ShouldDoSomething_WhenCondition()
 
-Target function: ${input:function_name}
-Testing framework: ${input:framework}
+### Sample Test Structure
+
+```
+csharp
+public class ClassNameTests
+{
+    private readonly Mock<IDependency> _mock;
+    private readonly ClassName _service;
+
+    public ClassNameTests()
+    {
+        _mock = new Mock<IDependency>();
+        _service = new ClassName(_mock.Object);
+    }
+
+    [Fact]
+    public async Task MethodName_ShouldDoSomething_WhenValid()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
+
+    [Fact]
+    public async Task MethodName_ShouldThrowException_WhenInvalid()
+    {
+        // Arrange
+
+        // Act & Assert
+    }
+}
+```
+
+## Inputs
+Target function: CreateArticleAsync
+Testing framework: xUnit + Moq
