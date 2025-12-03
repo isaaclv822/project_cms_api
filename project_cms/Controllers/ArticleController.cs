@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using project_cms.DTOs;
 using project_cms.Interfaces;
 using project_cms.Models;
@@ -6,6 +7,7 @@ using project_cms.Services;
 
 namespace project_cms.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("article")]
     public class ArticleController : ControllerBase
