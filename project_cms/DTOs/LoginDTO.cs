@@ -1,11 +1,9 @@
-﻿namespace project_cms.Models
+﻿namespace project_cms.DTOs
 {
-    public class User
+    // DTO minimal pour register/login
+    public class LoginDto
     {
-        public int Id { get; set; }
-
         public string Username { get; set; }
-
         public string Password { get; set; }
     }
 }
