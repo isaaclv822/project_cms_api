@@ -1,76 +1,265 @@
-# project_cms
+﻿# project_cms
 
-Description
-- API .NET 8 pour la gestion d'articles (CRUD) avec Identity et JWT.
-- Base de donn�es PostgreSQL via Entity Framework Core (Npgsql).
-- Swagger activ� en environnement de d�veloppement avec support Bearer (JWT).
+## 🧾 Description
 
-Pr�requis
-- .NET 8 SDK
-- PostgreSQL
-- (Optionnel) __dotnet-ef__ global tool : `dotnet tool install --global dotnet-ef`
-- Packages NuGet : `Microsoft.EntityFrameworkCore`, `Npgsql.EntityFrameworkCore.PostgreSQL`, `Microsoft.EntityFrameworkCore.Tools`, `Microsoft.AspNetCore.Authentication.JwtBearer`, `Swashbuckle.AspNetCore`, `Microsoft.AspNetCore.Identity.EntityFrameworkCore`
+API **.NET 8** pour la gestion d’articles avec :
 
-Configuration (appsettings.json)
-- Le fichier `appsettings.json` n'est pas versionn� � vous devez le cr�er localement.
-- Cl�s requises :
-  - `ConnectionStrings: bdd` � cha�ne de connexion PostgreSQL utilis�e par `AppDbContext`.
-  - `Jwt: Key`, `Jwt: Issuer`, `Jwt: Audience` � param�tres pour la g�n�ration/validation des tokens JWT.
-  - `Logging` (optionnel)
+* CRUD complet
+* Authentification **Identity** + **JWT**
+* Base de données **PostgreSQL** via Entity Framework Core (Npgsql)
+* **Swagger** configuré avec authentification Bearer (JWT) en environnement de développement
 
-Exemple de `appsettings.json` (� adapter) :
-```
+Ce projet est conçu comme une base solide pour construire un CMS léger ou une API de blog. 
+L’objectif est de proposer une architecture claire, facilement extensible, avec séparation des 
+responsabilités et un système d’authentification prêt à l’emploi. Que vous souhaitiez ajouter des 
+catégories, stocker des images, gérer des utilisateurs ou exposer des endpoints supplémentaires, 
+le code est structuré pour évoluer rapidement et proprement. 
+
+---
+
+## 🚀 Prérequis
+
+* **.NET 8 SDK**
+* **PostgreSQL**
+* (Optionnel) Outil global pour EF Core :
+
+  ```bash
+  dotnet tool install --global dotnet-ef
+  ```
+* Packages principaux :
+
+  * `Microsoft.EntityFrameworkCore`
+  * `Npgsql.EntityFrameworkCore.PostgreSQL`
+  * `Microsoft.EntityFrameworkCore.Tools`
+  * `Microsoft.AspNetCore.Authentication.JwtBearer`
+  * `Microsoft.AspNetCore.Identity.EntityFrameworkCore`
+  * `Swashbuckle.AspNetCore`
+
+---
+
+## ⚙️ Configuration (`appsettings.json`)
+
+> 📌 Le fichier `appsettings.json` n’est **pas versionné**, vous devez le créer localement.
+
+#### Clés obligatoires
+
+* `ConnectionStrings: bdd` : chaîne de connexion PostgreSQL pour `AppDbContext`
+* `Jwt: Key`, `Jwt: Issuer`, `Jwt: Audience` : configuration du JWT
+* `Logging` (facultatif)
+
+#### Exemple de configuration
+
+```json
 {
   "ConnectionStrings": {
-    "bdd": "Host=localhost;Port=5432;Database=project_cms_db;Username=postgres;Password=your
-    _password"
-    },
-    "Jwt": {
+    "bdd": "Host=localhost;Port=5432;Database=project_cms_db;Username=postgres;Password=your_password"
+  },
+  "Jwt": {
     "Key": "votre_cle_secrete_longue_pour_jwt",
-      "Issuer": "votre_issuer",
-      "Audience": "votre_audience"
-    },
-    "Logging": {
-      "LogLevel": {
-        "Default": "Information",
-        "Microsoft.AspNetCore": "Warning"
-      }
+    "Issuer": "votre_issuer",
+    "Audience": "votre_audience"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
     }
-    }
+  }
+}
 ```
 
-Swagger � documentation et utilisation
-- Swagger est configur� dans `Program.cs` et exposera l'UI en mode Development.
-- Le sch�ma de s�curit� Bearer est d�clar� ; pour appeler les endpoints prot�g�s depuis Swagger :
-  1. Ouvrir `https://{host}:{port}/swagger` (ou l'URL affich�e � l'ex�cution).
-  2. Cliquer sur le bouton "Authorize".
-  3. Entrer le token sous la forme : `Bearer {votre_token_JWT}` (ex. `Bearer eyJ...`).
-- En production, si vous souhaitez activer Swagger hors-dev, d�placer `app.UseSwagger()` / `app.UseSwaggerUI()` hors du check `if (app.Environment.IsDevelopment())` en prenant en compte les risques d'exposition.
+> 🔐 En production : stocker `Jwt:Key` dans une variable d’environnement ou un secret manager.
 
-Authentification
-- Identity est configur� avec `IdentityUser` et `IdentityRole`.
-- JWT : la validation utilise `Jwt:Key`, `Jwt:Issuer` et `Jwt:Audience` depuis `appsettings.json`.
-- Assurez-vous que la cl� (`Jwt:Key`) est suffisamment longue et stock�e de fa�on s�curis�e (secrets, variables d'environnement ou Azure Key Vault en production).
+---
 
-Migrations et mise � jour de la base de donn�es (EF Core)
-- Depuis le dossier du projet (ex. `cd project_cms`) :
-  - Ajouter une migration :
-    - CLI .NET : `dotnet ef migrations add InitialCreate`
-  - Appliquer les migrations (mise � jour de la base) :
-    - CLI .NET : `dotnet ef database update`
-- Depuis Visual Studio (__Package Manager Console__) :
-  - S'assurer que le __Default project__ est le projet `project_cms`.
-  - Ex�cuter : `__Add-Migration__ InitialCreate`
-  - Puis : `__Update-Database__`
-- Si vous avez une solution multi-projets ou que vous ex�cutez depuis la racine, utilisez les options `-p` (projet) et `-s` (startup) :
-  - `dotnet ef migrations add InitialCreate -p project_cms -s project_cms`
-  - `dotnet ef database update -p project_cms -s project_cms`
+## 📄 Swagger
 
-Conseils rapides
-- Pour le d�veloppement local, `Jwt:Key` peut �tre dans `appsettings.Development.json` ou stock� via `dotnet user-secrets`.
-- V�rifier la cha�ne de connexion `ConnectionStrings: bdd` si les migrations �chouent (authentification PostgreSQL, ports, valeurs).
-- Si `dotnet ef` n'est pas reconnu, installez l'outil : `dotnet tool install --global dotnet-ef` et ajoutez les packages EF Tools au projet.
+* UI activée **en mode Development**
+* Schéma de sécurité **Bearer** configuré
 
-Support
-- Fichier d'entr�e : `Program.cs`
-- Endpoints articles : contr�leur `Controllers/ArticleController.cs` (routes sous `/article`)
+### Utilisation
+
+1. Lancer l’application et ouvrir l’URL Swagger (ex : `https://localhost:5001/swagger`)
+2. Cliquer sur **Authorize**
+3. Entrer :
+
+   ```
+   Bearer eyJ...
+   ```
+
+### Activer Swagger en production (⚠️)
+
+Déplacer :
+
+```csharp
+app.UseSwagger();
+app.UseSwaggerUI();
+```
+
+hors du :
+
+```csharp
+if (app.Environment.IsDevelopment())
+```
+
+---
+
+## 🔑 Authentification
+
+* Utilisation d’`IdentityUser` et `IdentityRole`
+* JWT généré et validé via les valeurs `Jwt:*`
+* Pensé pour une configuration simple et sécurisée
+
+---
+
+## 🧱 Architecture
+
+Organisation en couches simples :
+
+* `Controllers`
+* `Services` / `Mappers`
+* `Interfaces`
+* `Data`
+* `Models`
+* `DTOs`
+* `Program.cs`
+
+### Arborescence simplifiée
+
+```
+project_cms/
+├─ Controllers/
+│  ├─ AuthController.cs
+│  └─ ArticleController.cs
+├─ Data/
+│  └─ AppDbContext.cs
+├─ Interfaces/
+│  └─ IArticleRepository.cs
+├─ Services/
+│  └─ ArticleMapper.cs
+├─ Models/
+│  └─ Article.cs
+├─ DTOs/
+│  ├─ ArticleRequestDTO.cs
+│  └─ ArticleResponseDTO.cs
+├─ Program.cs
+└─ appsettings.json (local)
+```
+
+---
+
+## 🛠️ Migrations (Entity Framework Core)
+
+### Avec CLI .NET
+
+```bash
+# Ajouter une migration
+dotnet ef migrations add InitialCreate
+
+# Appliquer la migration
+dotnet ef database update
+```
+
+### Multi-projets
+
+```bash
+dotnet ef migrations add InitialCreate -p project_cms -s project_cms
+dotnet ef database update -p project_cms -s project_cms
+```
+
+### Visual Studio
+
+Package Manager Console :
+
+```powershell
+Add-Migration InitialCreate
+Update-Database
+```
+
+> ⚠️ Vérifier que le **Default project** est bien `project_cms`.
+
+---
+
+## 📡 Endpoints principaux
+
+### Base routes
+
+* Auth : `/user`
+* Articles : `/article`
+
+---
+
+### 🔐 Authentification (public)
+
+#### `POST /user/register`
+
+* Crée un utilisateur Identity
+
+Body (JSON) :
+
+```json
+{
+  "username": "user@example.com",
+  "password": "Password123!"
+}
+```
+
+#### `POST /user/login`
+
+Réponse :
+
+```json
+{
+  "token": "eyJ..."
+}
+```
+
+---
+
+### 📝 Articles (JWT obligatoire)
+
+#### `GET /article`
+
+Récupère tous les articles.
+
+#### `GET /article/{id}`
+
+Récupère un article par id.
+
+#### `POST /article/add`
+
+Body :
+
+```json
+{
+  "title": "Titre",
+  "content": "Contenu"
+}
+```
+
+#### `PUT /article/update/{id}`
+
+#### `DELETE /article/delete/{id}`
+
+Réponse attendue : `204 NoContent` si suppression OK.
+
+---
+
+## 💡 Conseils rapides
+
+* Utiliser `appsettings.Development.json` pour les secrets en local.
+* Installer `dotnet-ef` si la commande EF n'est pas reconnue :
+
+  ```bash
+  dotnet tool install --global dotnet-ef
+  ```
+* Si erreur PostgreSQL : vérifier user, mot de passe, port (par défaut `5432`).
+
+---
+
+## 🆘 Support
+
+* Fichier principal : `Program.cs`
+* Endpoints articles : `Controllers/ArticleController.cs`
+
+---
